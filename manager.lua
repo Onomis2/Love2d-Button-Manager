@@ -21,60 +21,73 @@ local function withinBounds(x, y, bounds)
     end
 end
 
-function manager.mousepressed(x, y, click)
-    if click == 1 then
-        for _, button in pairs(buttons) do
-            if withinBounds(x, y, button) then
-                if button.click then
-                    button.click()
-                end
+function manager.mousepressed(id, x, y, click)
+    if click ~= 1 then return end
+
+    local function handleButton(button)
+        if withinBounds(x, y, button) then
+            if button.click then
+                button.click()
             end
+        end
+    end
+
+    if not id then
+        for _, button in pairs(buttons) do
+            handleButton(button)
+        end
+    elseif type(id) == "table" then
+        for _, singleId in ipairs(id) do
+            if buttons[singleId] then
+                handleButton(buttons[singleId])
+            end
+        end
+    else
+        if buttons[id] then
+            handleButton(buttons[id])
         end
     end
 end
 
 function manager.draw(id)
+    local function drawButton(button)
+        if button.type == "rectangle" then
+            if not button.img then
+                love.graphics.setColor(button.color[1], button.color[2], button.color[3], button.color[4])
+                love.graphics.rectangle("fill", button.x, button.y, button.width, button.height)
+            else
+                love.graphics.setColor(button.color[1], button.color[2], button.color[3], button.color[4])
+                love.graphics.draw(button.img.image, button.x, button.y, 0, button.width / button.img.image:getWidth(), button.height / button.img.image:getHeight())
+            end
+            if button.text then
+                if button.text.font then love.graphics.setFont(button.text.font) end
+                love.graphics.setColor(button.text.color[1], button.text.color[2], button.text.color[3], button.text.color[4])
+                love.graphics.print(button.text.text, button.x + button.text.padX, button.y + button.text.padY)
+            end
+        elseif button.type == "circle" then
+            love.graphics.setColor(button.color[1], button.color[2], button.color[3], button.color[4])
+            love.graphics.circle("fill", button.x, button.y, button.radius, button.detail)
+        end
+    end
+
     if not id then
         for _, button in pairs(buttons) do
-            if button.type == "rectangle" then
-                if not button.img then
-                    love.graphics.setColor(button.color[1], button.color[2], button.color[3], button.color[4])
-                    love.graphics.rectangle("fill", button.x, button.y, button.width, button.height)
-                else
-                    love.graphics.setColor(button.color[1], button.color[2], button.color[3], button.color[4])
-                    love.graphics.draw(button.img.image, button.x, button.y, 0, button.width / button.img.image:getWidth(), button.height / button.img.image:getHeight())
-                end
-                if button.text then
-                    if button.text.font then love.graphics.setFont(button.text.font) end
-                    love.graphics.setColor(button.text.color[1], button.text.color[2], button.text.color[3], button.text.color[4])
-                    love.graphics.print(button.text.text, button.x + button.text.padX, button.y + button.text.padY)
-                end
-            elseif button.type == "circle" then
-                love.graphics.setColor(button.color[1], button.color[2], button.color[3], button.color[4])
-                love.graphics.circle("fill", button.x , button.y, button.radius, button.detail)
+            drawButton(button)
+        end
+    elseif type(id) == "table" then
+        for _, singleId in ipairs(id) do
+            if buttons[singleId] then
+                drawButton(buttons[singleId])
             end
         end
     else
-        if buttons[id].type == "rectangle" then
-                if not buttons[id].image then
-                    love.graphics.setColor(buttons[id].color[1], buttons[id].color[2], buttons[id].color[3], buttons[id].color[4])
-                    love.graphics.rectangle("fill", buttons[id].x, buttons[id].y, buttons[id].width, buttons[id].height)
-                    if buttons[id].text then
-                        if buttons[id].text.font then love.graphics.setFont(buttons[id].text.font) end
-                        love.graphics.setColor(buttons[id].text.color[1], buttons[id].text.color[2], buttons[id].text.color[3], buttons[id].text.color[4])
-                        love.graphics.print(buttons[id].text.text, buttons[id].x + buttons[id].text.padX, buttons[id].y + buttons[id].text.padY)
-                    end
-                else
-                    -- do button.image logic
-                end
-        elseif buttons[id].type == "circle" then
-            love.graphics.setColor(buttons[id].color[1], buttons[id].color[2], buttons[id].color[3], buttons[id].color[4])
-            love.graphics.circle("fill", buttons[id].x , buttons[id].y, buttons[id].radius)
+        if buttons[id] then
+            drawButton(buttons[id])
         end
     end
 end
 
-function CreateButton(id, type, data, click)
+function manager.create(id, type, data, click)
     local errors, warnings = {}, {}
 
     ---- Validate parameters
@@ -195,7 +208,7 @@ function CreateButton(id, type, data, click)
     end
 end
 
-function DeleteButton(id)
+function manager.delete(id)
     if buttons[id] then
         buttons[id] = nil
     else
