@@ -4,20 +4,10 @@ local manager = {}
 local buttons = {}
 
 local function withinBounds(x, y, bounds)
-    if bounds.type == "rectangle" then
-        if x >= bounds.x and x <= bounds.x + bounds.width and y >= bounds.y and y <= bounds.y + bounds.height then
-            return true
-        else
-            return false
-        end
-    elseif bounds.type == "circle" then
-        local dx = x - bounds.x
-        local dy = y - bounds.y
-        if (dx * dx + dy * dy) <= (bounds.radius * bounds.radius) then
-            return true
-        else
-            return false
-        end
+    if x >= bounds.x and x <= bounds.x + bounds.width and y >= bounds.y and y <= bounds.y + bounds.height then
+        return true
+    else
+        return false
     end
 end
 
@@ -51,22 +41,17 @@ end
 
 function manager.draw(id)
     local function drawButton(button)
-        if button.type == "rectangle" then
-            if not button.img then
-                love.graphics.setColor(button.color[1], button.color[2], button.color[3], button.color[4])
-                love.graphics.rectangle("fill", button.x, button.y, button.width, button.height)
-            else
-                love.graphics.setColor(button.color[1], button.color[2], button.color[3], button.color[4])
-                love.graphics.draw(button.img.image, button.x, button.y, 0, button.width / button.img.image:getWidth(), button.height / button.img.image:getHeight())
-            end
-            if button.text then
-                if button.text.font then love.graphics.setFont(button.text.font) end
-                love.graphics.setColor(button.text.color[1], button.text.color[2], button.text.color[3], button.text.color[4])
-                love.graphics.print(button.text.text, button.x + button.text.padX, button.y + button.text.padY)
-            end
-        elseif button.type == "circle" then
+        if not button.img then
             love.graphics.setColor(button.color[1], button.color[2], button.color[3], button.color[4])
-            love.graphics.circle("fill", button.x, button.y, button.radius, button.detail)
+            love.graphics.rectangle("fill", button.x, button.y, button.width, button.height)
+        else
+            love.graphics.setColor(button.color[1], button.color[2], button.color[3], button.color[4])
+            love.graphics.draw(button.img.image, button.x, button.y, 0, button.width / button.img.image:getWidth(), button.height / button.img.image:getHeight())
+        end
+        if button.text then
+            if button.text.font then love.graphics.setFont(button.text.font) end
+            love.graphics.setColor(button.text.color[1], button.text.color[2], button.text.color[3], button.text.color[4])
+            love.graphics.print(button.text.text, button.x + button.text.padX, button.y + button.text.padY)
         end
     end
 
@@ -87,7 +72,7 @@ function manager.draw(id)
     end
 end
 
-function manager.create(id, type, data, click)
+function manager.create(id, data, click)
     local errors, warnings = {}, {}
 
     ---- Validate parameters
@@ -105,13 +90,6 @@ function manager.create(id, type, data, click)
         end
     end
 
-    -- Check typing
-    if not type then
-        table.insert(errors, "Button type cannot be nil")
-    elseif type ~= "rectangle" and type ~= "circle" then
-        table.insert(errors, "Button type not recognized: '" .. tostring(type) .. "'")
-    end
-
     -- Check data
     if not data then
         table.insert(errors, "Button data cannot be nil")
@@ -123,18 +101,8 @@ function manager.create(id, type, data, click)
             table.insert(warnings, "Button color not assigned, defaulting to white")
             data.color = {1, 1, 1, 1}
         end
-        if type == "rectangle" then
-            if not data.width or not data.height then
-                table.insert(errors, "Button width and height cannot be nil for rectangle type")
-            end
-        elseif type == "circle" then
-            if not data.radius then
-                table.insert(errors, "Button radius and detail cannot be nil for circle type")
-            end
-            if not data.detail then
-                table.insert(warnings, "Button detail not assigned, defaulting to 7")
-                data.detail = 7
-            end
+        if not data.width or not data.height then
+            table.insert(errors, "Button width and height cannot be nil for rectangle type")
         end
         if data.text then
             if not data.text.font then
@@ -180,28 +148,15 @@ function manager.create(id, type, data, click)
     end
 
     -- Add button to buttons list
-    if type == "rectangle" then
-        buttons[id] = {
-            type = type,
-            x = data.x,
-            y = data.y,
-            width = data.width,
-            height = data.height,
-            color = data.color,
-            text = data.text,
-            click = click
-        }
-    elseif type == "circle" then
-        buttons[id] = {
-            type = type,
-            x = data.x,
-            y = data.y,
-            radius = data.radius,
-            detail = data.detail,
-            color = data.color,
-            click = click
-        }
-    end
+    buttons[id] = {
+        x = data.x,
+        y = data.y,
+        width = data.width,
+        height = data.height,
+        color = data.color,
+        text = data.text,
+        click = click
+    }
     if data.image then
         buttons[id].img = {}
         buttons[id].img.image = love.graphics.newImage(data.image.path)
