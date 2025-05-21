@@ -73,68 +73,22 @@ function manager.draw(id)
 end
 
 function manager.create(id, data, click)
-    local errors, warnings = {}, {}
+    local errors = {}
 
     ---- Validate parameters
-    -- Check if an id is assigned
-    if not id then
-        print("[ButtonManager] ERROR: Button ID can not be nil")
-        return
-    end
-
-    -- Check if id is not duplicate
     for _, button in pairs(buttons) do
-        if button.id == id then
-            print("[ButtonManager] ERROR: Button ID already exists: " .. tostring(id))
-            return
+        if button.id and button.id == id then
+            table.insert(errors, "Button ID already exists: " .. tostring(id))
         end
     end
-
-    -- Check data
     if not data then
         table.insert(errors, "Button data cannot be nil")
     else
         if not data.x or not data.y then
             table.insert(errors, "Button x and y coordinates cannot be nil")
         end
-        if not data.color then
-            table.insert(warnings, "Button color not assigned, defaulting to white")
-            data.color = {1, 1, 1, 1}
-        end
         if not data.width or not data.height then
-            table.insert(errors, "Button width and height cannot be nil for rectangle type")
-        end
-        if data.text then
-            if not data.text.font then
-                table.insert(warnings, "Button text font not assigned")
-            end
-            if not data.text.text then
-                table.insert(errors, "Button text cannot be nil")
-            end
-            if not data.text.color then
-                table.insert(warnings, "Button text color not assigned, defaulting to white")
-                data.color = {1, 1, 1, 1}
-            end
-            if not data.text.padX or not data.text.padY then
-                table.insert(warnings, "Button text padding not assigned, defaulting to 0")
-                data.text.padX, data.text.y = 0,0
-            end
-        end
-        if data.image then
-            table.insert(warnings, "This feature is not implemented yet, please use text instead")
-        end
-    end
-
-    -- Check function
-    if not click then
-        table.insert(warnings, "Button click function is nil, button will do nothing when clicked.")
-    end
-
-    -- Display warnings
-    if #warnings > 0 then
-        print("[ButtonManager] WARNING in button: '" .. tostring(id) .. "':")
-        for _, warn in ipairs(warnings) do
-            print("  - " .. warn)
+            table.insert(errors, "Button width and height cannot be nil")
         end
     end
 
@@ -153,13 +107,13 @@ function manager.create(id, data, click)
         y = data.y,
         width = data.width,
         height = data.height,
-        color = data.color,
+        color = data.color or {1,1,1,1},
         text = data.text,
         click = click
     }
     if data.image then
         buttons[id].img = {}
-        buttons[id].img.image = love.graphics.newImage(data.image.path)
+        buttons[id].img.image = data.image.img
     end
 end
 
