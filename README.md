@@ -5,6 +5,7 @@ A library I built to create and manage buttons really easily. Allows for creatio
 
 <!-- Add a video tutorial up here once the library is finished. -->
 
+Download the module 'manager.lua' and add it to your project files.
 Require the module in your main file:
 
 ```local button = require("manager")```
@@ -66,10 +67,40 @@ The data table defines the properties of a button.
 
 ### example buttons:
 
-```button.create("quit", {x = 350, y = 250, width = 100, height = 100, color = {1,0.2,0.2,1}, text = {text = "EXIT", padX = 35, padY = 35, color = {0.8,0,0,1}}}, function() love.event.quit() end)```
+```
+button.create(
+    "quit",
+    {x = 350,
+    y = 250,
+    width = 100,
+    height = 100,
+    color = {1,0.2,0.2,1},
+    text = {
+        text = "EXIT",
+        padX = 35,
+        padY = 35,
+        color = {0.8,0,0,1}}
+    }, 
+    function() love.event.quit() end
+)
+```
 ![The code above creates this quit button ingame.](https://github.com/Onomis2/Love2d-Button-Manager/blob/main/docs/images/example1.png)
-```button.create(1, {x = 300, y = 100, width = 50, height = 20, color = {0.6,0.6,0.6,1}, image = love.graphics.newImage())```
-![The code above creates this quit button ingame.](https://github.com/Onomis2/Love2d-Button-Manager/blob/main/docs/images/example2.png)
+```
+button.create(
+    1,
+    {
+        x = 300,
+        y = 100,
+        width = 50,
+        height = 20,
+        color = {0.6,0.6,0.6,1},
+        image = {
+            img = love.graphics.newImage(image.png)
+        }
+    },
+    function() button.delete(1) end
+)```
+![The code above creates this useless button ingame.](https://github.com/Onomis2/Love2d-Button-Manager/blob/main/docs/images/example2.png)
 
 ## Integration with Love2D
 

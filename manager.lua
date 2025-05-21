@@ -86,7 +86,7 @@ function manager.create(id, data, click)
         if not data.width then table.insert(errors, "Missing required field: width") end
         if not data.height then table.insert(errors, "Missing required field: height") end
         if data.image then
-            if not data.image.img then table.insert(errors, "Missing required field: image.img") end
+            if not data.image.img or type(data.image.img) ~= "userdata" then table.insert(errors, "Missing or incorrect required field: image.img") end
         end
     end
 
