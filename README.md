@@ -14,7 +14,7 @@ Creating a Button:
 Drawing buttons:
 
 ```button.draw(id)```
--id (optional): Draw a specific button (string|int), multiple (table), or all (nil).
+* id (optional): Draw a specific button (string|int), multiple (table), or all (nil).
 
 Activating buttons:
 
@@ -23,17 +23,17 @@ Activating buttons:
         button.mouseclick(id, x, y, click)
     end
 ```
--id (optional): Draw a specific button (string|int), multiple (table), or all (nil).
+* id (optional): Draw a specific button (string|int), multiple (table), or all (nil).
 
 
 # Parameters:
 
--id (string|integer): Unique identifier for the button.
--type (string): Button shape. Must be one of:
-    -"rectangle"
-    -"circle"
--data (table): Table of visual and positional parameters. Varies based on type.
--callback (function): Function called when the button is clicked.
+* id (string|integer): Unique identifier for the button.
+* type (string): Button shape. Must be one of:
+    * "rectangle"
+    * "circle"
+* data (table): Table of visual and positional parameters. Varies based on type.
+* callback (function): Function called when the button is clicked.
 
 # Data Parameter
 
