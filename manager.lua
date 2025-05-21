@@ -164,10 +164,20 @@ function manager.create(id, data, click)
 end
 
 function manager.delete(id)
-    if buttons[id] then
+    local function deleteButton(id)
         buttons[id] = nil
+    end
+
+    if not id then
+        for id, _ in pairs(buttons) do
+            deleteButton(id)
+        end
+    elseif type(id) == "table" then
+        for _, singleId in ipairs(id) do
+            deleteButton(singleId)
+        end
     else
-        print("[ButtonManager] WARNING: Tried deleting button with id: " .. tostring(id) .. ", but it does not exist.")
+        deleteButton(id)
     end
 end
 

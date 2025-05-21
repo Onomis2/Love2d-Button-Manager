@@ -25,6 +25,11 @@ Activating buttons:
 ```
 * id (optional): Draw a specific button (string|int), multiple (table), or all (nil).
 
+Deleting buttons:
+
+```button.delete(id)```
+* id (optional): Draw a specific button (string|int), multiple (table), or all (nil).
+
 
 ### Parameters:
 
@@ -62,7 +67,7 @@ The data table defines the properties of a button.
 ```button.create("quit", {x = 350, y = 250, width = 100, height = 100, color = {1,0.2,0.2,1}, text = {text = "EXIT", padX = 35, padY = 35, color = {0.8,0,0,1}}}, function() love.event.quit() end)```
 ![The code above creates this quit button ingame.](https://github.com/Onomis2/Love2d-Button-Manager/blob/main/docs/images/example1.png)
 ```button.create(1, {x = 300, y = 100, width = 50, height = 20, color = {0.6,0.6,0.6,1}, image = love.graphics.newImage())```
-![The code above creates this quit button ingame.](https://github.com/Onomis2/Love2d-Button-Manager/blob/main/docs/images/example2.png
+![The code above creates this quit button ingame.](https://github.com/Onomis2/Love2d-Button-Manager/blob/main/docs/images/example2.png)
 
 ## Integration with Love2D
 
