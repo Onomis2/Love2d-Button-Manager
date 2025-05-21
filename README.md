@@ -26,7 +26,7 @@ Activating buttons:
 * id (optional): Draw a specific button (string|int), multiple (table), or all (nil).
 
 
-# Parameters:
+### Parameters:
 
 * id (string|integer): Unique identifier for the button.
 * type (string): Button shape. Must be one of:
@@ -35,7 +35,7 @@ Activating buttons:
 * data (table): Table of visual and positional parameters. Varies based on type.
 * callback (function): Function called when the button is clicked.
 
-# Data Parameter
+### Data Parameter
 
 The data table defines the properties of a button.
 
@@ -60,7 +60,7 @@ The data table defines the properties of a button.
 
 ```
 
-# example buttons:
+### example buttons:
 
 ```button.create()```
 [image]
